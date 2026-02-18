@@ -7,10 +7,16 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "import": "./dist/index.js", "types": "./dist/index.d.ts" },
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
     "./dist/*": "./dist/*"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -31,6 +37,14 @@
     "@payloadcms/ui": "^3.74.0",
     "react": "^19.0.0"
   },
-  "keywords": ["payload", "payloadcms", "vimeo", "plugin"],
-  "repository": { "type": "git", "url": "https://github.com/quentinjeanningros/payload-plugin-vimeo" }
+  "keywords": [
+    "payload",
+    "payloadcms",
+    "vimeo",
+    "plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quentinjeanningros/payload-plugin-vimeo.git"
+  }
 }
