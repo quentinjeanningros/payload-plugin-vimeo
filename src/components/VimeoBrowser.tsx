@@ -1,5 +1,7 @@
 "use client";
 
+import "./vimeo-browser.css";
+
 import {
   Button,
   Drawer,
@@ -10,7 +12,7 @@ import {
   useFormFields,
   useModal,
 } from "@payloadcms/ui";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { VimeoFolder, VimeoVideo } from "../types";
 import {
@@ -30,7 +32,7 @@ const PER_PAGE = 20;
 type ViewMode = "grid" | "list";
 
 export default function VimeoBrowser() {
-  const { dispatchFields } = useForm();
+  const { dispatchFields, submit } = useForm();
   const { closeModal, openModal } = useModal();
 
   const [folders, setFolders] = useState<VimeoFolder[]>([]);
@@ -43,6 +45,7 @@ export default function VimeoBrowser() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [pendingSave, setPendingSave] = useState(false);
   const videoAbortRef = useRef<AbortController | null>(null);
 
   const currentVimeoId = useFormFields(
@@ -55,6 +58,16 @@ export default function VimeoBrowser() {
   const currentVimeoUrl = useFormFields(
     ([f]) => (f.vimeoUrl?.value as string) || "",
   );
+  // When a video is selected the form fields are dispatched then pendingSave is
+  // set. The effect below waits until currentVimeoId has been committed to the
+  // form state (confirming all dispatches were processed) before submitting.
+  useEffect(() => {
+    if (pendingSave && currentVimeoId) {
+      setPendingSave(false);
+      void submit();
+    }
+  }, [pendingSave, currentVimeoId, submit]);
+
   // Gate on playerEmbedUrl so the preview never renders with a bare fallback URL
   // (which fails for private/unlisted videos) during the multi-dispatch sequence.
   const hasVideo = !!currentPlayerEmbedUrl;
@@ -129,6 +142,7 @@ export default function VimeoBrowser() {
     }
 
     closeModal(DRAWER_SLUG);
+    setPendingSave(true);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -192,6 +206,11 @@ export default function VimeoBrowser() {
             folders={folders}
             selectedFolderId={selectedFolderId}
             onSelect={handleFolderSelect}
+            onUploaded={(video) => {
+              loadVideos(selectedFolderId, 1);
+              setPage(1);
+              handleVideoSelect(video);
+            }}
           />
 
           <div style={{ flex: 1, overflowY: "auto", paddingRight: "1rem" }}>
@@ -199,11 +218,30 @@ export default function VimeoBrowser() {
             <div
               style={{
                 display: "flex",
-                justifyContent: "flex-end",
+                justifyContent: "space-between",
+                alignItems: "center",
                 gap: "0.25rem",
                 marginBottom: "0.75rem",
               }}
             >
+              <div>
+                {vimeoEditUrl && (
+                  <Button
+                    buttonStyle="pill"
+                    size="medium"
+                    el="anchor"
+                    url={"https://vimeo.com/home"}
+                    newTab
+                    margin={false}
+                    icon={<ExternalLinkIcon />}
+                    iconStyle="without-border"
+                    iconPosition="left"
+                  >
+                    Vimeo
+                  </Button>
+                )}
+              </div>
+              <div style={{ display: "flex", gap: "0.25rem" }}>
               <Button
                 buttonStyle={viewMode === "grid" ? "pill" : "transparent"}
                 size="medium"
@@ -222,6 +260,7 @@ export default function VimeoBrowser() {
                 aria-label="List view"
                 margin={false}
               />
+              </div>
             </div>
 
             {error && (

@@ -141,6 +141,41 @@ export async function fetchVideos(
   };
 }
 
+export async function initUpload(
+  token: string,
+  name: string,
+  size: number,
+  folderId?: string,
+): Promise<{ uploadUrl: string; videoUri: string }> {
+  const res = await fetch(`${VIMEO_API}/me/videos`, {
+    method: "POST",
+    headers: headers(token),
+    body: JSON.stringify({
+      name,
+      upload: { approach: "tus", size },
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`Vimeo API error (init upload): ${res.status} ${res.statusText}`);
+  }
+
+  const json = (await res.json()) as {
+    uri: string;
+    upload: { upload_link: string };
+  };
+
+  if (folderId) {
+    const videoId = extractIdFromUri(json.uri);
+    await fetch(`${VIMEO_API}/me/projects/${folderId}/videos/${videoId}`, {
+      method: "PUT",
+      headers: headers(token),
+    });
+  }
+
+  return { uploadUrl: json.upload.upload_link, videoUri: json.uri };
+}
+
 export async function fetchVideo(
   token: string,
   videoId: string,

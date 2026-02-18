@@ -46,5 +46,8 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/quentinjeanningros/payload-plugin-vimeo.git"
+  },
+  "dependencies": {
+    "tus-js-client": "^4.3.1"
   }
 }

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from "payload";
 import type { VimeoPluginOptions } from "./types";
-import { fetchFolders, fetchVideos } from "./vimeoApi";
+import { fetchFolders, fetchVideo, fetchVideos, initUpload } from "./vimeoApi";
 
 export function vimeoVideosCollection(
   options?: VimeoPluginOptions,
@@ -11,8 +11,8 @@ export function vimeoVideosCollection(
   return {
     slug: "vimeo-videos",
     labels: {
-      singular: "Video",
-      plural: "Videos",
+      singular: "Video (Vimeo)",
+      plural: "Videos (Vimeo)",
     },
     admin: {
       useAsTitle: "title",
@@ -201,6 +201,59 @@ export function vimeoVideosCollection(
           try {
             const result = await fetchVideos(token, folderId, page);
             return Response.json(result);
+          } catch (error) {
+            return Response.json({ error: String(error) }, { status: 502 });
+          }
+        },
+      },
+      {
+        path: "/upload-init",
+        method: "post",
+        handler: async (req) => {
+          const token = getToken();
+          if (!token) {
+            return Response.json(
+              { error: "VIMEO_ACCESS_TOKEN is not configured" },
+              { status: 500 },
+            );
+          }
+          try {
+            const body = (await req.json!()) as {
+              name: string;
+              size: number;
+              folderId?: string;
+            };
+            const result = await initUpload(
+              token,
+              body.name,
+              body.size,
+              body.folderId,
+            );
+            return Response.json(result);
+          } catch (error) {
+            return Response.json({ error: String(error) }, { status: 502 });
+          }
+        },
+      },
+      {
+        path: "/status",
+        method: "get",
+        handler: async (req) => {
+          const token = getToken();
+          if (!token) {
+            return Response.json(
+              { error: "VIMEO_ACCESS_TOKEN is not configured" },
+              { status: 500 },
+            );
+          }
+          const url = new URL(req.url || "", "http://localhost");
+          const videoId = url.searchParams.get("videoId");
+          if (!videoId) {
+            return Response.json({ error: "videoId is required" }, { status: 400 });
+          }
+          try {
+            const video = await fetchVideo(token, videoId);
+            return Response.json({ video });
           } catch (error) {
             return Response.json({ error: String(error) }, { status: 502 });
           }
