@@ -19,6 +19,5 @@ export default defineConfig({
   sourcemap: true,
   external: ["react", "react-dom", "payload", "@payloadcms/ui"],
   outDir: "dist",
-  loader: { ".css": "copy" },
   outExtension: () => ({ js: ".js" }),
 });

@@ -12,8 +12,6 @@ import {
 } from "@payloadcms/ui";
 import { useCallback, useRef, useState } from "react";
 
-import "./vimeo-browser.css";
-
 import type { VimeoFolder, VimeoVideo } from "../types";
 import {
   buildPreviewUrl,
