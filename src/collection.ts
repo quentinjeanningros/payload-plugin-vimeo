@@ -17,7 +17,7 @@ export function vimeoVideosCollection(
     admin: {
       useAsTitle: "title",
       defaultColumns: ["title", "vimeoId", "duration"],
-      group: "Vimeo",
+      group: options?.group !== undefined ? options.group : "Vimeo",
     },
     access: {
       read: () => true,

@@ -20,4 +20,5 @@ export interface VimeoVideo {
 
 export interface VimeoPluginOptions {
   accessToken?: string;
+  group?: string | false;
 }
