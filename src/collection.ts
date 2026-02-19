@@ -35,6 +35,7 @@ export function vimeoVideosCollection(
       {
         name: "title",
         type: "text",
+        localized: true,
         required: true,
         admin: {
           description: "Video title, used as iframe title attribute",
