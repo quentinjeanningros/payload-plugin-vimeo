@@ -12,7 +12,10 @@ type UploadPhase =
   | { phase: "processing" }
   | { phase: "error"; message: string };
 
-async function pollVideo(videoId: string, maxAttempts = 30): Promise<VimeoVideo | null> {
+async function pollVideo(
+  videoId: string,
+  maxAttempts = 30,
+): Promise<VimeoVideo | null> {
   for (let i = 0; i < maxAttempts; i++) {
     await new Promise((r) => setTimeout(r, 3000));
     try {
@@ -82,7 +85,10 @@ export function VideoUpload({
           if (video) {
             setState({ phase: "idle" });
             onUploaded(video);
-            const editUrl = buildVimeoEditUrl(video.link, extractIdFromUri(video.uri));
+            const editUrl = buildVimeoEditUrl(
+              video.link,
+              extractIdFromUri(video.uri),
+            );
             if (editUrl) window.open(editUrl, "_blank", "noopener,noreferrer");
           } else {
             setState({ phase: "error", message: "Processing timed out" });
@@ -115,7 +121,12 @@ export function VideoUpload({
   };
 
   return (
-    <div style={{ paddingTop: "1rem", borderTop: "1px solid var(--theme-elevation-150)" }}>
+    <div
+      style={{
+        paddingTop: "1rem",
+        borderTop: "1px solid var(--theme-elevation-150)",
+      }}
+    >
       <input
         ref={inputRef}
         type="file"
@@ -128,7 +139,10 @@ export function VideoUpload({
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={onDrop}
           style={{
@@ -136,7 +150,9 @@ export function VideoUpload({
             padding: "0.625rem 0.5rem",
             border: `1.5px dashed ${isDragging ? "var(--theme-success-500)" : "var(--theme-elevation-300)"}`,
             borderRadius: "6px",
-            background: isDragging ? "var(--theme-success-100, rgba(0,200,100,0.06))" : "transparent",
+            background: isDragging
+              ? "var(--theme-success-100, rgba(0,200,100,0.06))"
+              : "transparent",
             color: "var(--theme-text)",
             fontSize: "0.75rem",
             cursor: "pointer",
@@ -150,11 +166,25 @@ export function VideoUpload({
 
       {state.phase === "uploading" && (
         <div>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.375rem", fontSize: "0.75rem" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "0.375rem",
+              fontSize: "0.75rem",
+            }}
+          >
             <span>Uploading…</span>
             <span>{Math.round(state.progress * 100)}%</span>
           </div>
-          <div style={{ height: "4px", background: "var(--theme-elevation-150)", borderRadius: "2px", overflow: "hidden" }}>
+          <div
+            style={{
+              height: "4px",
+              background: "var(--theme-elevation-150)",
+              borderRadius: "2px",
+              overflow: "hidden",
+            }}
+          >
             <div
               style={{
                 height: "100%",
@@ -184,14 +214,27 @@ export function VideoUpload({
       )}
 
       {state.phase === "processing" && (
-        <p style={{ fontSize: "0.75rem", opacity: 0.6, margin: 0, textAlign: "center" }}>
+        <p
+          style={{
+            fontSize: "0.75rem",
+            opacity: 0.6,
+            margin: 0,
+            textAlign: "center",
+          }}
+        >
           Processing on Vimeo…
         </p>
       )}
 
       {state.phase === "error" && (
         <div>
-          <p style={{ fontSize: "0.75rem", color: "var(--theme-error-500)", margin: "0 0 0.375rem" }}>
+          <p
+            style={{
+              fontSize: "0.75rem",
+              color: "var(--theme-error-500)",
+              margin: "0 0 0.375rem",
+            }}
+          >
             {state.message}
           </p>
           <button

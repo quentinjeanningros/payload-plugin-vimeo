@@ -157,7 +157,9 @@ export async function initUpload(
   });
 
   if (!res.ok) {
-    throw new Error(`Vimeo API error (init upload): ${res.status} ${res.statusText}`);
+    throw new Error(
+      `Vimeo API error (init upload): ${res.status} ${res.statusText}`,
+    );
   }
 
   const json = (await res.json()) as {

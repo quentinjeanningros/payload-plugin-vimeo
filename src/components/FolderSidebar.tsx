@@ -1,6 +1,6 @@
 "use client";
 
-import type { VimeoVideo, VimeoFolder } from "../types";
+import type { VimeoFolder, VimeoVideo } from "../types";
 import { extractIdFromUri } from "../utils/url";
 import { VideoUpload } from "./VideoUpload";
 

@@ -242,24 +242,24 @@ export default function VimeoBrowser() {
                 )}
               </div>
               <div style={{ display: "flex", gap: "0.25rem" }}>
-              <Button
-                buttonStyle={viewMode === "grid" ? "pill" : "transparent"}
-                size="medium"
-                icon={<GridViewIcon />}
-                iconStyle="without-border"
-                onClick={() => setViewMode("grid")}
-                aria-label="Grid view"
-                margin={false}
-              />
-              <Button
-                buttonStyle={viewMode === "list" ? "pill" : "transparent"}
-                size="medium"
-                icon={<ListViewIcon />}
-                iconStyle="without-border"
-                onClick={() => setViewMode("list")}
-                aria-label="List view"
-                margin={false}
-              />
+                <Button
+                  buttonStyle={viewMode === "grid" ? "pill" : "transparent"}
+                  size="medium"
+                  icon={<GridViewIcon />}
+                  iconStyle="without-border"
+                  onClick={() => setViewMode("grid")}
+                  aria-label="Grid view"
+                  margin={false}
+                />
+                <Button
+                  buttonStyle={viewMode === "list" ? "pill" : "transparent"}
+                  size="medium"
+                  icon={<ListViewIcon />}
+                  iconStyle="without-border"
+                  onClick={() => setViewMode("list")}
+                  aria-label="List view"
+                  margin={false}
+                />
               </div>
             </div>
 

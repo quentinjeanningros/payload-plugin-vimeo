@@ -249,7 +249,10 @@ export function vimeoVideosCollection(
           const url = new URL(req.url || "", "http://localhost");
           const videoId = url.searchParams.get("videoId");
           if (!videoId) {
-            return Response.json({ error: "videoId is required" }, { status: 400 });
+            return Response.json(
+              { error: "videoId is required" },
+              { status: 400 },
+            );
           }
           try {
             const video = await fetchVideo(token, videoId);
