@@ -44,6 +44,7 @@ export function vimeoVideosCollection(
         name: "alt",
         type: "text",
         required: true,
+        localized: true,
         admin: {
           description: "Alt text for accessibility",
         },
