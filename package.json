@@ -1,6 +1,6 @@
 {
   "name": "payload-plugin-vimeo",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "PayloadCMS 3.x plugin for managing Vimeo videos",
   "license": "MIT",
   "type": "module",
